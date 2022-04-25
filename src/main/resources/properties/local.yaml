@@ -1,0 +1,8 @@
+http:
+ listner:
+   host: "localhost"
+   port: "8083"
+ requester:
+   host: "localhost"
+   port: "8082"
+   path: "/api/accounts"
