@@ -3,18 +3,18 @@
    <flow name="account-xapi-app-v1-main">
         <http:listener config-ref="account-xapi-app-v1-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
-                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:response>
             <http:error-response statusCode="#[vars.httpStatus default 500]">
-                <http:body>#[payload]</http:body>
-                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+                <http:body><![CDATA[#[vars.customError]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response>
         </http:listener>
-        <flow-ref doc:name="Flow Reference" doc:id="97f536df-9eb4-4196-b405-b94741760cff" name="common-initialize-variableSub_Flow"/>
+        <flow-ref doc:name="common-initialize-variableSub_Flow" doc:id="97f536df-9eb4-4196-b405-b94741760cff" name="common-initialize-variableSub_Flow"/>
 		<apikit:router config-ref="account-xapi-app-v1-config" />
-		<error-handler ref="global-error-handler" />
+		<error-handler ref="globalerrorhandling:custom-errorhandler-onerrorpropagate" />
     </flow>
-    <flow name="account-xapi-app-v1-console">
+    <!-- <flow name="account-xapi-app-v1-console">
         <http:listener config-ref="account-xapi-app-v1-httpListenerConfig" path="/console/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers>#[vars.outboundHeaders default {}]</http:headers>
@@ -26,11 +26,11 @@
         </http:listener>
         <apikit:console config-ref="account-xapi-app-v1-config" />
 		<error-handler ref="global-error-handler" />
-    </flow>
+    </flow> -->
     <flow name="post:\accounts:application\json:account-xapi-app-v1-config">
-        <logger level="INFO" doc:name="Logger" doc:id="142dfc92-bf1c-44b5-8060-8d40ab304b05" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"flowname": flow.name,&#10;	"appname": app.name,&#10;	"transactionid": vars.requestHeader.transactionId,&#10;	"status": "before flow reference",&#10;	"datetime": now()&#10;}]'/>
-		<flow-ref doc:name="Flow Reference" doc:id="483cd038-4da4-4432-bdb1-f8fa21ff089b" name="post-customer-xpapiFlow"/>
-		<logger level="INFO" doc:name="Logger" doc:id="5929f61d-ecdf-4c4e-bfee-6397fdce3f15" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"flowname": flow.name,&#10;	"appname": app.name,&#10;	"transactionid": vars.requestHeader.transactionId,&#10;	"status": "after flow reference",&#10;	"datetime": now()&#10;}]'/>
-		<error-handler ref="global-error-handler" />
+        <logger level="INFO" doc:name="startLog" doc:id="142dfc92-bf1c-44b5-8060-8d40ab304b05" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"flowname": flow.name,&#10;	"appname": app.name,&#10;	"transactionid": vars.requestHeader.transactionId,&#10;	"status": "before flow reference",&#10;	"datetime": now()&#10;}]'/>
+		<flow-ref doc:name="post-customer-xpapiFlow" doc:id="483cd038-4da4-4432-bdb1-f8fa21ff089b" name="post-customer-xpapiFlow"/>
+		<logger level="INFO" doc:name="endLog" doc:id="5929f61d-ecdf-4c4e-bfee-6397fdce3f15" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"flowname": flow.name,&#10;	"appname": app.name,&#10;	"transactionid": vars.requestHeader.transactionId,&#10;	"status": "after flow reference",&#10;	"datetime": now()&#10;}]'/>
+		<error-handler ref="globalerrorhandling:custom-errorhandler-onerrorpropagate" />
     </flow>
 </mule>

@@ -6,8 +6,8 @@
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<flow name="post-customer-xpapiFlow" doc:id="84796455-6428-465a-9513-fa321075c396" >
-		<logger level="INFO" doc:name="Logger" doc:id="5a2969c9-971a-4bdd-8b25-df7f61c53ad4" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"flowname": flow.name,&#10;	"appname": app.name,&#10;	"transactionid": vars.requestHeader.transactionId,&#10;	"status": "papi http request",&#10;	"datetime": now()&#10;}]'/>
-		<http:request method="POST" doc:name="Request" doc:id="5c61d260-7011-40b7-afeb-f0bc621bcefe" config-ref="HTTP_Request_configuration" path="${http.requester.path}" responseTimeout="40000000">
+		<logger level="INFO" doc:name="startLog" doc:id="5a2969c9-971a-4bdd-8b25-df7f61c53ad4" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"flowname": flow.name,&#10;	"appname": app.name,&#10;	"transactionid": vars.requestHeader.transactionId,&#10;	"status": "papi http request",&#10;	"datetime": now()&#10;}]'/>
+		<http:request method="POST" doc:name="accounts-papiRequest" doc:id="5c61d260-7011-40b7-afeb-f0bc621bcefe" config-ref="HTTP_Request_configuration" path="${http.requester.path}" responseTimeout="40000000">
 			<http:headers ><![CDATA[#[%dw 2.0
 output application/json
 ---
@@ -18,7 +18,7 @@ output application/json
 
 }]]]></http:headers>
 		</http:request>
-		<logger level="INFO" doc:name="Logger" doc:id="e0ebc13d-4d0f-4b96-b4ba-d0397d8673b3" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"flowname": flow.name,&#10;	"appname": app.name,&#10;	"transactionid": vars.requestHeader.transactionId,&#10;	"status": "papi http request responce",&#10;	"datetime": now()&#10;}]'/>
+		<logger level="INFO" doc:name="endtLog" doc:id="e0ebc13d-4d0f-4b96-b4ba-d0397d8673b3" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"flowname": flow.name,&#10;	"appname": app.name,&#10;	"transactionid": vars.requestHeader.transactionId,&#10;	"status": "papi http request responce",&#10;	"datetime": now()&#10;}]'/>
 		<ee:transform doc:name="Transform Message" doc:id="c55a88d3-5753-4ebe-ae28-2bd54207339a" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -33,5 +33,26 @@ output application/json
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="0n Error Propagate" doc:id="87a38807-dc81-42c8-9136-f960042ac269" type="HTTP:BAD_REQUEST, HTTP:CONNECTIVITY, HTTP:INTERNAL_SERVER_ERROR, HTTP:METHOD_NOT_ALLOWED, HTTP:NOT_FOUND, HTTP:SERVICE_UNAVAILABLE, HTTP:TIMEOUT">
+				<ee:transform doc:name="error_Payload" doc:id="e44e8fa6-1e5c-4d44-b16b-9c01a14d3d33" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{ 
+	"msg"		: error.description,
+	"error"		: {
+		"type"	: error.errorType.asString,
+		"title"	: error.errorType.identifier,
+		"details" : error.detailedDescription
+  }
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="log_Payload" doc:id="bdff9e85-e03a-4d0a-90fb-cbc07792ca2e" message="#[payload]"/>
+			</on-error-propagate>
+		</error-handler>
+		 
 	</flow>
 </mule>

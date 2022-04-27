@@ -5,7 +5,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<sub-flow name="common-initialize-variableSub_Flow" doc:id="72de8224-5c5b-4cb6-94db-19e4dbffe209" >
-		<ee:transform doc:name="Transform Message" doc:id="f7e23c60-3ca5-4f06-b55c-cf44e3ce8316" >
+		<ee:transform doc:name="variables" doc:id="f7e23c60-3ca5-4f06-b55c-cf44e3ce8316" >
 			<ee:message >
 			</ee:message>
 			<ee:variables >

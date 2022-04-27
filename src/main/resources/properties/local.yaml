@@ -6,3 +6,9 @@ http:
    host: "localhost"
    port: "8082"
    path: "/api/accounts"
+   
+smtp:
+  host: "Smtp.gmail.com"
+  port: "587"
+  user: "lakkyreddyvamsi@gmail.com"
+  
