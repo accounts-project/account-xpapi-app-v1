@@ -10,7 +10,21 @@
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response>
         </http:listener>
-        <flow-ref doc:name="common-initialize-variableSub_Flow" doc:id="97f536df-9eb4-4196-b405-b94741760cff" name="common-initialize-variableSub_Flow"/>
+		<ee:transform doc:name="variables" doc:id="06e211d9-9959-473d-97a8-35233424d14a" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="requestPayload" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+				<ee:set-variable variableName="requestHeader" ><![CDATA[attributes.headers]]></ee:set-variable>
+				<ee:set-variable variableName="requesturiParam" ><![CDATA[attributes.queryParams]]></ee:set-variable>
+				<ee:set-variable variableName="requesturiParams" ><![CDATA[attributes.uriParams]]></ee:set-variable>
+				<ee:set-variable variableName="requestTime" ><![CDATA[now()]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		
 		<apikit:router config-ref="account-xapi-app-v1-config" />
 		<error-handler ref="globalerrorhandling:custom-errorhandler-onerrorpropagate" />
     </flow>
@@ -29,7 +43,7 @@
     </flow> -->
     <flow name="post:\accounts:application\json:account-xapi-app-v1-config">
         <logger level="INFO" doc:name="startLog" doc:id="142dfc92-bf1c-44b5-8060-8d40ab304b05" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"flowname": flow.name,&#10;	"appname": app.name,&#10;	"transactionid": vars.requestHeader.transactionId,&#10;	"status": "before flow reference",&#10;	"datetime": now()&#10;}]'/>
-		<flow-ref doc:name="post-customer-xpapiFlow" doc:id="483cd038-4da4-4432-bdb1-f8fa21ff089b" name="post-customer-xpapiFlow"/>
+		<flow-ref doc:name="post-customer-xpapiFlow" doc:id="483cd038-4da4-4432-bdb1-f8fa21ff089b" name="post-accounts-xpapiFlow"/>
 		<logger level="INFO" doc:name="endLog" doc:id="5929f61d-ecdf-4c4e-bfee-6397fdce3f15" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"flowname": flow.name,&#10;	"appname": app.name,&#10;	"transactionid": vars.requestHeader.transactionId,&#10;	"status": "after flow reference",&#10;	"datetime": now()&#10;}]'/>
 		<error-handler ref="globalerrorhandling:custom-errorhandler-onerrorpropagate" />
     </flow>

@@ -7,6 +7,9 @@ http:
    port: "8082"
    path: "/api/accounts"
    
+clientId: "4101f02862044495864ab2c4ffc3f767"
+clientSecret: "5Ecd27f076C94A06833F0d7f547973e8"
+
 smtp:
   host: "Smtp.gmail.com"
   port: "587"

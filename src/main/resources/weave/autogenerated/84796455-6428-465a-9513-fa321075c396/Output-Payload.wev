@@ -1,4 +1,7 @@
 %dw 2.0
 
-type auto_84796455_6428_465a_9513_fa321075c396_Output_Payload = Any
+type auto_84796455_6428_465a_9513_fa321075c396_Output_Payload = {
+  accountResponse: Array<{    AccountNumber: String,     status: String,     _?: Any  }>, 
+  _?: Any
+}
 

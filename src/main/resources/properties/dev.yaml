@@ -1,0 +1,19 @@
+http:
+ listner:
+   host: "localhost"
+   port: "8081`"
+ requester:
+   host: "accounts-papi-app.us-e2.cloudhub.io"
+   port: ""
+   path: "/api/accounts"
+   
+smtp:
+  host: "Smtp.gmail.com"
+  port: "587"
+  user: "lakkyreddyvamsi@gmail.com"
+
+clientId: "4101f02862044495864ab2c4ffc3f767"
+clientSecret: "5Ecd27f076C94A06833F0d7f547973e8"
+
+
+
